@@ -1,5 +1,6 @@
-#include<iostream>
-#include"LList.h"
+#include <iostream>
+#include "LList.h"
+#include "llist_node.h"
 
 using namespace std;
 
@@ -14,13 +15,16 @@ int main() {
 	//Make sure upper is an integer
 	cin >> upper;
 	
-	cout << "Upper = " << upper;
+	cout << "Upper = " << upper << endl;
 
 	//Create linked list of all numbers from 2-upper bound (number list)
-	LList * numbers = new LList(upper);
+	LList * numbers = new LList ();
+	numbers -> populate_list (upper);
+
 	//Create two print functions - print all and print X
 	cout << "Print first 10...\n";
 	numbers -> printList(10);
+	
 	cout << "Print all...\n";
 	numbers -> printList();
 
