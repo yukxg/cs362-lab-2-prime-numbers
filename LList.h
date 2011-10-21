@@ -18,7 +18,9 @@ class LList {
 		void remove_node ();
 		void remove_node (int);
 
-		//void removeMult(int);
+		//void remove_mult(int);
+		bool has_next();
+	
 	private:
 		LList_Node * head;
 		int size;

@@ -29,12 +29,15 @@ void LList :: populate_list (int upper) {
 
 // Prints everything in the linked list
 void LList :: printList () {
-
+	this -> printList(size);
 }
 
 // Prints x first values of the linked list
 void LList :: printList(int x) {
-
+	for(int i = 0; i < x; i++) {
+		//If node[i] -> has_next
+			//Print node[i]
+	}
 }
 
 // Removes the head node
@@ -47,3 +50,8 @@ void LList :: remove_node (int index) {
 
 }
 
+//Check if there is a next node
+bool LList :: has_next () {
+	//Check for next node
+	return false;
+}
