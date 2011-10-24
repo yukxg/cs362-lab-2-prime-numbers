@@ -4,20 +4,16 @@
 
 using namespace std;
 
-//Add threading later
 int main() {
-	//Determine if initiating or receiving node
-	//Initiator will...
+
+	/* Determine if initiating or receiving node */
 	int upper;
 
 	//Ask for upper bound
 	cout << "Enter the upper bound:";
-	//Make sure upper is an integer
 	cin >> upper;
 	
-	cout << "Upper = " << upper << endl;
-
-	//Create linked list of all numbers from 2-upper bound (number list)
+	/* Create linked list of all numbers from 2-upper bound (number list) */
 	LList * numbers = new LList ();
 	numbers -> populate_list (upper);
 
@@ -25,11 +21,13 @@ int main() {
 	cout << "Print first 10...\n";
 	numbers -> printList(10);
 	
+	cout << endl;
+
 	cout << "Print all...\n";
 	numbers -> printList();
 
 	//Create solutions linked list
-	LList * solutions = new LList();
+//	LList * solutions = new LList();
 		
 		//while(work to do)
 			//Pull first prime and remove multiples from number list

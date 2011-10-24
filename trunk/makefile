@@ -11,4 +11,4 @@ llist_node.o: llist_node.cpp llist_node.h
 	g++ -Wall -c llist_node.cpp llist_node.h
 
 clean: 
-	rm -f *.o *.out
+	rm -f *.o *.gch *.out

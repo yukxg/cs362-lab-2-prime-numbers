@@ -20,10 +20,10 @@ LList :: ~LList() {
 	}
 }
 
-// Automatically adds 1 through upper to the list
+// add specified number of nodes, starting from 2
 void LList :: populate_list (int upper) {
 	for (int i = 0; i < upper; i++) {
-
+		this -> add_node (i + 2);
 	}
 }
 
@@ -33,25 +33,78 @@ void LList :: printList () {
 }
 
 // Prints x first values of the linked list
-void LList :: printList(int x) {
-	for(int i = 0; i < x; i++) {
-		//If node[i] -> has_next
-			//Print node[i]
+void LList :: printList(int range) {
+	LList_Node * current_node = head;
+
+	// make sure range is acceptable...
+	if (range > size) {
+		range = size;
+	}
+
+	for(int i = 0; i < range; i++) {
+		current_node -> print_node ();
+		
+		if (i < range - 1) {
+			cout << ", ";
+		}
+
+		current_node = current_node -> next; 
 	}
 }
 
 // Removes the head node
 void LList :: remove_node () {
-	this -> remove_node (0);
+	if (size == 1) {
+		free (head);
+		size = 0;
+	} else if (size > 1) {
+		LList_Node * head_copy = head;
+		head = head -> next;
+
+		free (head_copy);
+		size--;
+	}
 }
 
 // Removes a node at index
 void LList :: remove_node (int index) {
+	if (index == 0) {
+		remove_node ();
+	} else if (index > 0 && index < size) {
+		LList_Node * current_node = head;
+		LList_Node * next_node;
 
+		for (int i = 0; i < index; i++) {
+			current_node = current_node -> next;
+		}
+
+		next_node = current_node -> next;
+		current_node -> next = next_node -> next;
+
+		free (next_node);
+		size--;
+
+	} else if (index >= size){
+		perror ("LList:remove_node error - index is greater than size");
+	} else {
+		perror ("LList:remove_node error - unknown error");
+	}
 }
 
-//Check if there is a next node
-bool LList :: has_next () {
-	//Check for next node
-	return false;
+// Adds an LList_Node to the end of our LList
+void LList :: add_node (int node) {
+	if (size == 0) {
+		head = new LList_Node (node);
+	} else {
+		LList_Node * current_node = head;
+
+		while (current_node -> has_next () ) {
+			current_node = current_node -> next;
+		}
+
+		current_node -> next = new LList_Node (node);
+	}
+
+	size++;
 }
+
