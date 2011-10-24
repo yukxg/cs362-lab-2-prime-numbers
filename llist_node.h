@@ -13,8 +13,13 @@ class LList_Node {
 		LList_Node ();
 		LList_Node (int);
 
-	private:
+		bool has_next ();
+		void print_node ();
+
+	protected:
 		LList_Node * next;
+
+	private:
 		int value;
 };
 

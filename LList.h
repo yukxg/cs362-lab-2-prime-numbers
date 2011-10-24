@@ -1,7 +1,9 @@
 #ifndef LLIST_H
 #define LLIST_H
 
-#include<iostream>
+#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
 #include "llist_node.h"
 
 using namespace std;
@@ -17,6 +19,7 @@ class LList {
 		void printList(int);
 		void remove_node ();
 		void remove_node (int);
+		void add_node (int);
 
 		//void remove_mult(int);
 		bool has_next();
