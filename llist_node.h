@@ -15,6 +15,7 @@ class LList_Node {
 
 		bool has_next ();
 		void print_node ();
+		int get_value ();
 
 	protected:
 		LList_Node * next;

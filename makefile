@@ -1,3 +1,6 @@
+run: rem_a_out all a.out
+	valgrind ./a.out > run.log
+
 all: main.o LList.o llist_node.o
 	g++ main.o LList.o llist_node.o
 
@@ -10,5 +13,8 @@ LList.o: LList.cpp LList.h
 llist_node.o: llist_node.cpp llist_node.h
 	g++ -Wall -c llist_node.cpp llist_node.h
 
+rem_a_out:
+	rm -f a.out
+
 clean: 
-	rm -f *.o *.gch *.out
+	rm -f *.o *.gch *.out *.log

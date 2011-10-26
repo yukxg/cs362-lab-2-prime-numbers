@@ -50,38 +50,47 @@ void LList :: printList(int range) {
 
 		current_node = current_node -> next; 
 	}
+
+	cout << endl;
 }
 
-// Removes the head node
-void LList :: remove_node () {
+// Removes the head node and returns the value of the node
+int LList :: remove_node () {
+	int result = head -> get_value ();
+
 	if (size == 1) {
-		free (head);
+		delete (head);
 		size = 0;
 	} else if (size > 1) {
 		LList_Node * head_copy = head;
 		head = head -> next;
 
-		free (head_copy);
+		delete (head_copy);
 		size--;
 	}
+
+	return result;
 }
 
-// Removes a node at index
-void LList :: remove_node (int index) {
+// Removes a node at index and returns the value of the node
+int LList :: remove_node (int index) {
+	int result = 0;
+
 	if (index == 0) {
-		remove_node ();
+		result = remove_node ();
 	} else if (index > 0 && index < size) {
 		LList_Node * current_node = head;
 		LList_Node * next_node;
 
-		for (int i = 0; i < index; i++) {
+		for (int i = 0; i < index - 1; i++) {
 			current_node = current_node -> next;
 		}
 
 		next_node = current_node -> next;
 		current_node -> next = next_node -> next;
 
-		free (next_node);
+		result = next_node -> get_value ();
+		delete (next_node);
 		size--;
 
 	} else if (index >= size){
@@ -89,6 +98,8 @@ void LList :: remove_node (int index) {
 	} else {
 		perror ("LList:remove_node error - unknown error");
 	}
+
+	return result;
 }
 
 // Adds an LList_Node to the end of our LList
@@ -108,3 +119,20 @@ void LList :: add_node (int node) {
 	size++;
 }
 
+// removes the first node, then removes all nodes
+// that are multiples of the first node and then
+// returns that first node
+int LList :: remove_mult () {
+	LList_Node * current_node = head -> next;
+	int result = remove_node ();
+
+	for (int i = 0; i < size; i++) {
+		if (current_node -> get_value () % result == 0) {
+			remove_node (i);
+		}
+
+		current_node = current_node -> next;
+	}
+
+	return result;
+}

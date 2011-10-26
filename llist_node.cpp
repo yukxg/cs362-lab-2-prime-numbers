@@ -18,3 +18,7 @@ bool LList_Node :: has_next () {
 void LList_Node :: print_node () {
 	cout << value;
 }
+
+int LList_Node :: get_value () {
+	return value;
+}
