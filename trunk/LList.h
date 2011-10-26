@@ -3,7 +3,6 @@
 
 #include <iostream>
 #include <stdio.h>
-#include <stdlib.h>
 #include "llist_node.h"
 
 using namespace std;
@@ -17,12 +16,10 @@ class LList {
 		void populate_list (int);
 		void printList ();
 		void printList(int);
-		void remove_node ();
-		void remove_node (int);
+		int remove_node ();
+		int remove_node (int);
 		void add_node (int);
-
-		//void remove_mult(int);
-		bool has_next();
+		int remove_mult();
 	
 	private:
 		LList_Node * head;

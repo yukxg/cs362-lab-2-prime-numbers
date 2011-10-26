@@ -23,8 +23,12 @@ int main() {
 	
 	cout << endl;
 
+	numbers -> remove_mult ();
+
 	cout << "Print all...\n";
 	numbers -> printList();
+
+	delete (numbers);
 
 	//Create solutions linked list
 //	LList * solutions = new LList();

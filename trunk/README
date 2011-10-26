@@ -1,0 +1,14 @@
+use bitsets as our datastructure and message:
+	#include <bitset>
+	bitset<range> bits;
+	bits.set (); // sets all bits to 1
+	bits.flip (); // flips all bits
+
+	bits.set (int index, bool true_or_false); // set a bit to 1 or 0
+
+our program:
+	make a class that can send() and recv() using the bitsets
+	bitset class can return as long data type to send over network
+	once recv'd, we can take that long and convert back to bitset
+	then we're able to sieve the bits out (index + offset)
+		offset would be 2 because at index 0, we're looking at int value of 2
