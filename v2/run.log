@@ -1,0 +1,24 @@
+
+------------------------------
+------ Starting E_Sieve ------
+------------------------------
+
+Which node am I? (Initiatior - i, Receiver - r): 
+Node - Default constructor called
+LList :: Constructor called
+Node - run called
+Node :: run_receiver () called
+Bit_Set :: Default constructor called
+Node :: listen () called (for Bit_Set)
+Node :: listen () called (for LList)
+LList :: sort_list () called
+Node :: send () called (for LList)
+LList :: print_list () called
+Bit_Set :: Destructor called
+Node - Destructor called
+LList :: Destructor called
+
+--------------------------------------------
+------ E_Sieve has run to completion! ------
+--------------------------------------------
+
