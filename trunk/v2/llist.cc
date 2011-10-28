@@ -24,3 +24,8 @@ void LList :: sort_list () {
 void LList :: print_list () {
 	cout << "LList :: print_list () called" << endl;
 }
+
+// TODO : Method
+char * LList :: to_string () {
+	return NULL;
+}
