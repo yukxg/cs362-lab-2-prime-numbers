@@ -14,6 +14,7 @@ class LList {
 		void add (int);
 		void sort_list ();
 		void print_list ();
+		char * to_string ();
 };
 
 #endif

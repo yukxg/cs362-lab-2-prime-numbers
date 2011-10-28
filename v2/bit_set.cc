@@ -3,16 +3,50 @@
 // TODO : Constructor
 Bit_Set :: Bit_Set () {
 	cout << "Bit_Set :: Default constructor called" << endl;
+
+	array_size = 0;
+	pad = 0;
+	bits = NULL;
 }
 
 // TODO : Constructor
 Bit_Set :: Bit_Set (int num_bits) {
 	cout << "Bit_Set :: Constructor (int) called" << endl;
+
+	/* Set the array_size of the array to store the bits */
+	pad = num_bits % BITS_PER_BYTE;
+
+	if (pad == 0) {
+		array_size = num_bits;
+	} else {
+		array_size = num_bits + 1;
+	}
+
+	/* Actually create the set of bits */
+	bits = new char [array_size];
+
+	for (int i = 0; i < array_size; i++) {
+		bits [i] = '0';
+	}
+}
+
+// TODO : Constructor 
+Bit_Set :: Bit_Set (char * input_bits) {
+	cout << "Bit_Set :: Constructor (char *) called" << endl;
+
+	bits = input_bits;
+	pad = 0;
+	
+	int i = 0;
+	while (bits [i] != NULL) i++;	
+	array_size = i + 1;
 }
 
 // TODO : Destructor
 Bit_Set :: ~Bit_Set () {
 	cout << "Bit_Set :: Destructor called" << endl;
+
+	delete [] bits;
 }
 
 // TODO : Method
@@ -38,7 +72,7 @@ bool Bit_Set :: is_zero () {
 } 
 
 // TODO : Method
-/* Returns the size of the list of bits */
+/* Returns the number of bits in the entire set */
 int Bit_Set :: get_size () {
 	cout << "Bit_Set :: get_size () called" << endl;
 
@@ -57,4 +91,9 @@ int Bit_Set :: get_bit (int index) {
 /* Sets the bit to a 1 or 0 at given index */
 void Bit_Set :: set_bit (int index, int value) {
 	cout << "Bit_Set :: set_bit () called" << endl;
+}
+
+// TODO : Method
+char * Bit_Set :: to_string () {
+	return NULL;
 }
