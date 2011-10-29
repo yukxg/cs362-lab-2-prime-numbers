@@ -15,7 +15,7 @@ class LList {
 		void add (int);
 		void sort_list ();
 		void print_list ();
-		void remove_node ();
+		void remove ();
 		char * to_string ();
 
 	private:

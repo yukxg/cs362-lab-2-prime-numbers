@@ -16,8 +16,8 @@ bit_set.o: bit_set.cc bit_set.h
 llist.o: llist.cc llist.h
 	g++ -Wall -c llist.cc
 
-llist_node.o: llist_node.cpp llist_node.h
-	g++ -Wall -c llist_node.cpp
+llist_node.o: llist_node.cc llist_node.h
+	g++ -Wall -c llist_node.cc
 
 connector.o: connector.cc connector.h
 	g++ -Wall -c connector.cc

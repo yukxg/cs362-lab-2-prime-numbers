@@ -13,7 +13,7 @@ LList :: ~LList () {
 	cout << "LList :: Destructor called" << endl;
 
 	while(size > 0) {
-		this -> remove_node();
+		remove();
 	}	
 }
 
@@ -21,12 +21,18 @@ LList :: ~LList () {
 void LList :: add (int value) {
 	cout << "LList :: add () called" << endl;
 	
-	LList_Node * current = head;
-	while(current -> has_next()) {
-		current = current -> next;
-	}
+	if (size == 0) {
+		head = new LList_Node (value);	
+	} else {
+		LList_Node * current = head;
 
-	current -> next = new LList_Node(value);
+		while(current -> has_next()) {
+			current = current -> next;
+		}
+
+		current -> next = new LList_Node(value);
+	}	
+
 	size++;
 }
 
@@ -59,9 +65,9 @@ void LList :: print_list () {
 }
 
 //Called by Destructor
-void LList :: remove_node () {
+void LList :: remove () {
 	if(size == 1) {
-		head = NULL;
+		delete (head);
 		size--;
 	} else if(size > 1) {
 		LList_Node * to_delete = head;
