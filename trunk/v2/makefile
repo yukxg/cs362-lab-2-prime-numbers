@@ -1,8 +1,8 @@
 run: rem_a_out all a.out
 	valgrind ./a.out | tee run.log
 
-all: main.o node.o bit_set.o llist.o connector.o
-	g++ main.o node.o bit_set.o llist.o connector.o
+all: main.o node.o bit_set.o llist.o llist_node.o connector.o
+	g++ main.o node.o bit_set.o llist.o llist_node.o connector.o
 
 main.o: main.cc
 	g++ -Wall -c main.cc
@@ -15,6 +15,9 @@ bit_set.o: bit_set.cc bit_set.h
 
 llist.o: llist.cc llist.h
 	g++ -Wall -c llist.cc
+
+llist_node.o: llist_node.cpp llist_node.h
+	g++ -Wall -c llist_node.cpp
 
 connector.o: connector.cc connector.h
 	g++ -Wall -c connector.cc
