@@ -107,7 +107,7 @@ char * Node :: ask_user_recv () {
 	cout << endl << "Input: ";
 	cin >> input;
 
-	while (input < 0 || input > 3) {
+	while (input < 0 || input > 2) {
 		cout << endl;
 		cout << "Input is out of range, please try again..." << endl;
 		cout << "0 - Clark" << endl;
@@ -201,6 +201,7 @@ void Node :: run_end (bool found_last_zero, bool received_zero, Bit_Set * bits) 
 	delete (bits);
 }
 
+// TODO : Method
 void Node :: add_to_prime_set (char * number_list) {
 	cout << "Node :: add_to_prime_set () called" << endl;
 }

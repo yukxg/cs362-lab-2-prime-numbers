@@ -35,10 +35,10 @@ Bit_Set :: Bit_Set (char * input_bits) {
 	cout << "Bit_Set :: Constructor (char *) called" << endl;
 
 	bits = input_bits;
-	pad = 0;
+	pad = -1; // Indicate that we didn't do any checking on it
 	
-	int i = 0;
-	while (bits [i] != NULL) i++;	
+	int i = 4;
+//	while (bits [i] != NULL) i++;	
 	array_size = i + 1;
 }
 
@@ -68,7 +68,7 @@ int Bit_Set :: get_first_one_bit () {
 bool Bit_Set :: is_zero () {
 	cout << "Bit_Set :: is_zero () called" << endl;
 
-	return false;
+	return true;
 } 
 
 // TODO : Method
