@@ -45,22 +45,21 @@ void LList :: sort_list () {
 //of each, 20 per line;
 void LList :: print_list () {
 	cout << "LList :: print_list () called" << endl;
-	int count = 0;
 	
-	if(size == 0) {
+	if (size == 0) {
 		cout << "LList is empty!\n";
 	} else {
-		LList_Node * current = head;
-		while(current -> has_next()) {
-			if(count == 19) {
-				cout << current -> value << ",\n";
-				count = 0;
-			} else {
-				cout << current -> value << ", ";
-				count++;
-			}
-			current = head -> next;
+		LList_Node * current_node = head;
+
+		cout << "{";
+
+		for (int i = 0; i < size - 1; i++) {
+			cout << current_node -> value << ", ";
+			current_node = current_node -> next;
 		}
+
+		cout << current_node -> value;
+		cout << "}" << endl;
 	}
 }
 
