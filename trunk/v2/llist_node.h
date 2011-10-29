@@ -15,11 +15,9 @@ class LList_Node {
 
 		bool has_next ();
 
-	protected:
-		LList_Node * next;
-
 	private:
 		int value;
+		LList_Node * next;
 };
 
 #endif
