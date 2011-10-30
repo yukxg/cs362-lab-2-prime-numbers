@@ -7,20 +7,27 @@ int main (void) {
 	LList * list = new LList ();
 
 	/* Test the add method */
+	list -> add (6);
+	list -> add (4);
+	list -> add (2);
 	list -> add (5);
-	list -> add (7);
-	list -> add (9);
-	list -> add (11);
+	list -> add (3);
+	list -> add (1);
 
 	list -> print_list ();
+
+	/* Test get_node () */
+	cout << endl;
+
+	for (int i = 0; i < list -> get_size (); i++) {
+		cout << "value of node at " << i << ": " << list -> get_node (i) << endl;
+	}
+
+	cout << endl;
 
 	/* Test the sorting */
-	list -> add (6);
-	list -> add (8);
-	list -> add (7);
-
-	list -> print_list ();
 	list -> sort_list ();
+	list -> print_list ();
 
 	return 0;
 }
