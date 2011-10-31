@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include "node.h"
 
 // Prototype
@@ -32,17 +33,17 @@ int main(void) {
 }
 
 char ask_user_role () {
-	char result;
+	string result;
 
 	cout << "Which node am I? (Initiatior - i, Receiver - r): ";
 	cin >> result;
 	cout << endl;
 
-	while (! (result == 'i' || result == 'r')) {
+	while (! (result == "i" || result == "r")) {
 		cout << "Incorrect input, please enter node type (Initiatior - i, Receiver - r): ";
 		cin >> result;
 		cout << endl;
 	}
 
-	return result;
+	return result[0];
 }
