@@ -4,8 +4,14 @@ run: rem_a_out all a.out
 all: main.o node.o bit_set.o llist.o llist_node.o connector.o
 	g++ main.o node.o bit_set.o llist.o llist_node.o connector.o
 
+test_connector: test_connector.o connector.o
+	g++ test_connector.o connector.o
+
 test_llist: test_llist.o llist.o llist_node.o
 	g++ test_llist.o llist.o llist_node.o
+
+test_connector.o: test_connector.cc
+	g++ -Wall -c test_connector.cc
 
 test_llist.o: test_llist.cc
 	g++ -Wall -c test_llist.cc
