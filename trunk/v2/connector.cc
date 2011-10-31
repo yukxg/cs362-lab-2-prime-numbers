@@ -1,37 +1,153 @@
 #include "connector.h"
 
-// TODO : Constructor
 Connector :: Connector () {
-	cout << "Connector Default constructor called" << endl;
+	receiver = new char [RECV_SIZE];
+	memset ((void *) receiver, '\0', (size_t) RECV_SIZE);
+	
+	port = 0;
+	msg = new char [MAXDATASIZE];
 }
 
-// TODO : Destructor
 Connector :: ~Connector () {
-	cout << "Connector destructor called" << endl;
+	delete[] receiver;
+	delete[] msg;
 }
 
-// TODO : Method
-void Connector :: set_port (int) {
-	cout << "Connector :: set_port called" << endl;
+void Connector :: set_port (int port_value) {
+	port = port_value;
 }
 
-// TODO : Method
-void Connector :: send (char *) {
-	cout << "Connector :: send () called" << endl; 
+void Connector :: set_receiver (char * receiver_name) {
+
+	int size = 0;
+	while (receiver_name [size] != '\0') size++;
+
+	strncpy (receiver, receiver_name, size);
+
+	cout << "receiver set to: " << receiver << endl;
 }
 
-// TODO : Method
-void Connector :: listen () {
-	cout << "Connector :: listen () called" << endl;
+void sigchld_handler(int s) {
+	while(wait (NULL) > 0);
 }
 
-// TODO : Method
-void Connector :: set_receiver (char *) {
-	cout << "Connector :: set_receiver () called" << endl;
+/* From sender.c */
+void Connector :: send_msg (char * message) {
+
+	int sockfd, new_fd; // listen on sock_fd, new connection on new_fd
+	struct sockaddr_in my_addr; // my address information
+	struct sockaddr_in their_addr; // connector’s address information
+	int sin_size;
+	struct sigaction sa;
+	int yes = 1;
+	
+	if ((sockfd = socket (AF_INET, SOCK_STREAM, 0)) == -1) {
+		perror ("socket");
+		exit(1);
+	}
+
+	if (setsockopt (sockfd, SOL_SOCKET, SO_REUSEADDR, & yes, sizeof(int)) == -1) {
+		perror ("setsockopt");
+		exit (1);
+	}
+
+	my_addr.sin_family = AF_INET; // host byte order
+	my_addr.sin_port = htons (port); // short, network byte order
+	my_addr.sin_addr.s_addr = INADDR_ANY; // automatically fill with my IP
+	memset(& (my_addr.sin_zero), '0', 8); // zero the rest of the struct
+	
+	if (bind (sockfd, (struct sockaddr *) & my_addr, sizeof (struct sockaddr)) == -1) {
+		perror ("bind");
+		exit (1);
+	}
+	
+	if (listen (sockfd, BACKLOG) == -1) {
+		perror ("listen");
+		exit (1);
+	}
+	
+	sa.sa_handler = sigchld_handler; // reap all dead processes
+	sigemptyset (& sa.sa_mask);
+	sa.sa_flags = SA_RESTART;
+	
+	if (sigaction (SIGCHLD, & sa, NULL) == -1) {
+		perror ("sigaction");
+		exit (1);
+	}
+	
+	while (1) { // main accept() loop
+		sin_size = sizeof (struct sockaddr_in);
+		
+		if ((new_fd = accept (sockfd, (struct sockaddr *) & their_addr, (socklen_t *) & sin_size)) == -1) {
+			perror ("accept");
+			continue;
+		}
+		
+		printf ("server: got connection from %s\n", inet_ntoa (their_addr.sin_addr));
+		
+		if (!fork ()) { // this is the child process
+			close (sockfd); // child doesn’t need the listener
+			
+			cout << "Sending message: " << message << endl;
+			
+			if (send (new_fd, message, 14, 0) == -1) {
+				perror ("send");
+			}
+			
+			close (new_fd);
+			exit (0);
+		}
+		
+		close (new_fd); // parent doesn't need this
+	}
 }
 
-// TODO : Method
+void Connector :: listen_msg () {
+	memset (msg, '\0', MAXDATASIZE);
+
+	while (msg == '\0') {
+		listen_msg_helper ();
+	}
+}
+/* From client.c */
+void Connector :: listen_msg_helper () {
+	
+	int sockfd, numbytes;
+	char buf [MAXDATASIZE];
+	struct hostent * he;
+	struct sockaddr_in their_addr; // connector's address information
+	
+	if ((he = gethostbyname (receiver)) == NULL) { // get the host info
+		perror ("gethostbyname");
+		exit (1);
+	}
+
+	if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+		perror ("socket");
+		exit (1);
+	}
+	
+	their_addr.sin_family = AF_INET; // host byte order
+	their_addr.sin_port = htons (port); // short, network byte order
+	their_addr.sin_addr = * ((struct in_addr *) he -> h_addr);
+	memset(& (their_addr.sin_zero), '\0', 8); // zero the rest of the struct
+	
+	if (connect (sockfd, (struct sockaddr *) & their_addr, sizeof (struct sockaddr)) == -1) {
+		perror ("connect");
+		exit (1);
+	}
+	
+	if ((numbytes = recv (sockfd, buf, MAXDATASIZE - 1, 0)) == -1) {
+		perror ("recv");
+		exit (1);
+	}
+	
+	buf [numbytes] = '\0';
+	strncpy (msg, buf, numbytes + 1);
+	printf ("Received: %s",buf);
+	close (sockfd);
+}
+
 char * Connector :: get_msg () {
-	cout << "Connector :: get_msg () called" << endl;
-	return NULL;
+	return msg;
 }

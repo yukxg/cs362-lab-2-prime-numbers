@@ -6,6 +6,8 @@ Node :: Node () {
 
 	prime_set = new LList ();
 	connector = new Connector ();
+	connector -> set_port (PORT);
+
 }
 
 // TODO : Destructor
@@ -28,11 +30,6 @@ void Node :: run_initiator () {
 	/* Some initialization */
 	bool found_last_zero = false;
 	bool received_zero = false;
-	connector -> set_port (PORT);
-
-	/* Ask the user which machine will be the Receiver */
-	char * receiver = ask_user_recv ();
-	connector -> set_receiver (receiver);
 
 	/* Ask the user how many integers to consider and create a bitset */
 	int upper = ask_user_upper ();
@@ -45,12 +42,12 @@ void Node :: run_initiator () {
 		prime_set -> add (prime);
 		remove_multiples (prime, bits);
 		found_last_zero = bits -> is_zero ();
-		connector -> send (bits -> to_string ());
+		connector -> send_msg (bits -> to_string ());
 
 		if (found_last_zero) {
 			continue;
 		} else {
-			connector -> listen ();
+			connector -> listen_msg ();
 			delete (bits);
 			bits = new Bit_Set (connector -> get_msg ());
 			received_zero = bits -> is_zero ();
@@ -68,9 +65,13 @@ void Node :: run_receiver () {
 	bool received_zero = false;
 	Bit_Set * bits = new Bit_Set ();
 
+	/* Ask the user which machine will be the Initiator */
+	char * receiver = ask_user_recv ();
+	connector -> set_receiver (receiver);
+
 	/* Run the sieve.  If we find the last prime, send a 0 to the receiver. */
 	while (!found_last_zero && !received_zero) {
-		connector -> listen ();
+		connector -> listen_msg ();
 		delete (bits);
 		bits = new Bit_Set (connector -> get_msg ());
 		received_zero = bits -> is_zero ();
@@ -78,7 +79,7 @@ void Node :: run_receiver () {
 		int prime = get_first_value (bits);
 		prime_set -> add (prime);
 		remove_multiples (prime, bits);
-		connector -> send (bits -> to_string ());
+		connector -> send_msg (bits -> to_string ());
 	}
 
 	run_end (found_last_zero, received_zero, bits);
@@ -181,14 +182,14 @@ void Node :: run_end (bool found_last_zero, bool received_zero, Bit_Set * bits) 
 	} else if (found_last_zero) {
 		cout << "I found the last prime!" << endl;
 
-		connector -> send (prime_set -> to_string ()); // send our answers to the receiver
-		connector -> listen (); // get back the final solution
+		connector -> send_msg (prime_set -> to_string ()); // send our answers to the receiver
+		connector -> listen_msg (); // get back the final solution
 		add_to_prime_set (connector -> get_msg ());
 	} else if (received_zero) {
-		connector -> listen (); // get the answers from the receiver
+		connector -> listen_msg (); // get the answers from the receiver
 		add_to_prime_set (connector -> get_msg ());
 		prime_set -> sort_list ();
-		connector -> send (prime_set -> to_string ()); // send the final solution
+		connector -> send_msg (prime_set -> to_string ()); // send the final solution
 	} else {
 		cout << "Error in Node :: run_initiator () - Something is seriously wrong here..." << endl;
 		exit (0);
