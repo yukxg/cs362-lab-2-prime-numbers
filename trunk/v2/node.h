@@ -2,8 +2,9 @@
 #define NODE_H
 
 #include <iostream>
+#include <set>
+#include <string>
 #include "bit_set.h"
-#include "llist.h"
 #include "connector.h"
 
 #define OFFSET 2
@@ -32,8 +33,9 @@ class Node {
 		void remove_multiples (int, Bit_Set *);
 		void run_end (bool, bool, Bit_Set *);
 		void add_to_prime_set (char *);
+		string prime_set_to_string ();
 
-		LList * prime_set;
+		set<int> * prime_set;
 		Connector * connector;
 };
 

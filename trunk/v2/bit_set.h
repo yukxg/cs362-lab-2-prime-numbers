@@ -2,6 +2,7 @@
 #define BIT_SET_H
 
 #include <iostream>
+#include <string>
 
 #define BITS_PER_BYTE 8
 
@@ -19,9 +20,10 @@ class Bit_Set {
 		int get_first_one_bit ();
 		bool is_zero ();
 		int get_size ();
-		int get_bit (int);
+		bool get_bit (int);
 		void set_bit (int, int);
 		char * to_string ();
+		void print_bit_set();
 	
 	private:
 		char * bits;
