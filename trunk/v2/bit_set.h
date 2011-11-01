@@ -22,13 +22,14 @@ class Bit_Set {
 		int get_size ();
 		bool get_bit (int);
 		void set_bit (int, int);
-		char * to_string ();
+		string * to_string ();
 		void print_bit_set();
-	
+		
 	private:
 		char * bits;
 		int pad;
 		int array_size;
+		int size;
 };
 
 #endif

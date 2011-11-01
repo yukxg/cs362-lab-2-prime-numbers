@@ -2,19 +2,19 @@
 
 /* Constructor */
 Bit_Set :: Bit_Set () {
-	cout << "Bit_Set :: Default constructor called" << endl;
 
 	array_size = 0;
+	size = 0;
 	pad = -1;
 	bits = NULL;
 }
 
 /* Constructor */
 Bit_Set :: Bit_Set (int num_bits) {
-	cout << "Bit_Set :: Constructor (int) called" << endl;
 
 	/* Set the array_size of the array to store the bits */
-	pad = num_bits % BITS_PER_BYTE;
+	size = num_bits;
+	pad = size % BITS_PER_BYTE;
 
 	if (pad == 0) {
 		array_size = num_bits / BITS_PER_BYTE;
@@ -33,26 +33,49 @@ Bit_Set :: Bit_Set (int num_bits) {
 
 /* Constructor */
 Bit_Set :: Bit_Set (char * input_bits) {
-	cout << "Bit_Set :: Constructor (char *) called" << endl;
-
-	bits = input_bits;
-	pad = 0; // Indicate that we didn't do any checking on it
 	
-	int i = 0;
-	while (bits[i] != '\0') i++;
-	array_size = i + 1;
+	size = strlen (input_bits);
+	pad = size % BITS_PER_BYTE;
+	
+	if (pad == 0) {
+		array_size = size / BITS_PER_BYTE;
+	} else {
+		array_size = (size / BITS_PER_BYTE) + 1;
+	}
+	
+	bits = new char [size];
+	memset (bits, 0x00, size);
+
+	for (int i = 0; i < array_size; i++) {
+		char result = 0x00;
+
+		for (int j = 0; j < BITS_PER_BYTE; j++) {
+			if (i == array_size - 1 && j >= pad) {
+				result = result << BITS_PER_BYTE - pad;
+				break;
+			} else {
+				if (input_bits [(i * BITS_PER_BYTE) + j] == '1') {
+					result = result | 0x01;
+				}
+				
+				if ((j < BITS_PER_BYTE - 1)) {
+					result = result << 1;
+				}
+			}
+		}	
+
+		bits [i] = result;
+	}
 }
 
 /* Destructor */
 Bit_Set :: ~Bit_Set () {
-	cout << "Bit_Set :: Destructor called" << endl;
 
 	delete [] bits;
 }
 
 /* Turns all of the bits on */
 void Bit_Set :: set () {
-	cout << "Bit_Set :: set () called" << endl;
 
 	for(int i = 0; i < array_size; i++) {
 		bits[i] = 0xFF;
@@ -61,22 +84,37 @@ void Bit_Set :: set () {
 
 /* Returns the index of the first 1 value found (going left to right).  Returns -1 on error */
 int Bit_Set :: get_first_one_bit () {
-	cout << "Bit_Set :: get_first_one_bit () called" << endl;
+
+	/*
 	int bit = 0;
 	int byte = 0;
 	for(byte = 0; byte < array_size; byte++) {
-		if(bits[byte] != 0) {
+		if(bits[byte] != 0x00) {
 			break;
 		}
 	}
-	while(!get_bit((byte * BITS_PER_BYTE) + bit)) bit++;
 
-	return ((byte * BITS_PER_BYTE) + bit);
+	cout << "First non-zero byte found at: " << byte << endl;
+
+	while(!get_bit((byte * BITS_PER_BYTE) + bit)) bit++;
+	cout << "first non-zero bit found at: " << bit << endl;
+	*/
+
+
+	int result = 0;
+
+	for (int i = 0; i < size; i++) {
+		if (get_bit (i)) {
+			result = i;
+			break;
+		}
+	}
+
+	return result;
 }
 
 /* Checks to see if the bitset is a bunch of zeroes */
 bool Bit_Set :: is_zero () {
-	cout << "Bit_Set :: is_zero () called" << endl;
 	bool result = true;
 
 	for(int i = 0; i < array_size; i++) {
@@ -91,20 +129,25 @@ bool Bit_Set :: is_zero () {
 //Verified
 /* Returns the number of bits in the entire set */
 int Bit_Set :: get_size () {
+
+	/*
 	int result = 0;
-	if(pad == 0) {
+	if (pad == 0) {
 		result = array_size * BITS_PER_BYTE;
 	} else {
 		result = (((array_size - 1) * BITS_PER_BYTE) + pad);
 	}
 	
-	return result;	
+	cout << "bit_set :: get_size returns: " << result << endl;
+	*/
+
+	return size;	
 }
 
 /* Returns whether the bit is a 1 or 0 at the given index */
 bool Bit_Set :: get_bit (int index) {
-	cout << "Bit_Set :: get_bit called (); index is " << index << endl;
-	bool result = true;
+
+	char result = 0x00;
 	int byte = index / BITS_PER_BYTE;
 	int bit = index % BITS_PER_BYTE;	
 	char row = bits[byte];
@@ -138,12 +181,12 @@ bool Bit_Set :: get_bit (int index) {
 			cout << "Error in Bit_Set :: get_bit(index); given: " << index << endl;
 	}
 
-	return result;
+
+	return (result != 0x00);
 }
 
 /* Sets the bit to a 1 or 0 at given index */
 void Bit_Set :: set_bit (int index, int value) {
-	cout << "Bit_Set :: set_bit () called" << endl;
 	int byte = index / BITS_PER_BYTE;
 	int bit = index % BITS_PER_BYTE;
 	char row = bits[byte];
@@ -179,13 +222,15 @@ void Bit_Set :: set_bit (int index, int value) {
 }
 
 /* Returns a char * of 0's and 1's with no spaces (i.e. "001100") */
-char * Bit_Set :: to_string () {
-	cout << "Bit_Set :: to_string() called" << endl;
+string * Bit_Set :: to_string () {
 	int size = get_size();
-	char * result = new char[size];
-	
+
+	// TODO : Check
+	string * result = new string ();
+		
 	for(int i = 0; i < size; i++) {
-		(get_bit(i) ? result[i] = '1' : result[i] = '0');
+		//(get_bit(i) ? *result += '1' : *result += '0');
+		(get_bit(i) ? *result += "1" : *result += "0");
 	}
 
 	return result;
@@ -193,10 +238,5 @@ char * Bit_Set :: to_string () {
 
 void Bit_Set :: print_bit_set() {
 	int size = get_size();
-	
-	for(int i = 0; i < size; i++) {
-		get_bit(i) ? cout << "1" : cout << "0";
-	}
-	cout << endl;
 }
 

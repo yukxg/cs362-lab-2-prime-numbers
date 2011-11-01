@@ -2,7 +2,6 @@
 
 /* Constructor */
 Node :: Node () {
-	cout << "Node - Default constructor called" << endl;
 
 	prime_set = new set<int>;
 	connector = new Connector ();
@@ -12,7 +11,6 @@ Node :: Node () {
 
 /* Destructor */
 Node :: ~Node () {
-	cout << "Node - Destructor called" << endl;
 
 	delete (prime_set);
 	delete (connector);
@@ -20,12 +18,14 @@ Node :: ~Node () {
 
 /* Depending on the role, calls the appropriate method to run the algorithm */
 void Node :: run (char role) {
-	cout << "Node - run called" << endl;
+	/* Ask the user which machine will be the Initiator */
+	char * receiver = ask_user_recv ();
+	connector -> set_receiver (receiver);
+
 	(role == 'i') ? run_initiator () : run_receiver ();
 }
 
 void Node :: run_initiator () {
-	cout << "Node - run_initiator called" << endl;
 
 	/* Some initialization */
 	bool found_last_zero = false;
@@ -33,7 +33,7 @@ void Node :: run_initiator () {
 
 	/* Ask the user how many integers to consider and create a bitset */
 	int upper = ask_user_upper ();
-	Bit_Set * bits = new Bit_Set (upper);
+	Bit_Set * bits = new Bit_Set (upper - 1);
 	bits -> set ();
 
 	/* Run the sieve.  If we find the last prime, send a 0 to the receiver. */
@@ -41,44 +41,46 @@ void Node :: run_initiator () {
 		int prime = get_first_value (bits);
 			
 		prime_set -> insert (prime);
-		//prime_set -> add (prime);
 		remove_multiples (prime, bits);
 		found_last_zero = bits -> is_zero ();
 
-		char * bits_string = bits -> to_string();
-		connector -> send_msg (bits_string);
-		delete(bits_string);
+		string * bits_string = bits -> to_string();
+
+		connector -> send_msg (bits_string -> c_str ());
+//		delete(bits_string);
 
 		if (found_last_zero) {
 			continue;
 		} else {
 			connector -> listen_msg ();
-			delete (bits);
+			cout << "received: " << connector -> get_msg () << endl;
+			//delete (bits);
+			//memset (bits, 0, sizeof (bits));
+
 			bits = new Bit_Set (connector -> get_msg ());
 			received_zero = bits -> is_zero ();
 		}
 	}
 	
 	run_end (found_last_zero, received_zero, bits);
+
+	/* Clean up */
+	delete (bits);
 }
 
 void Node :: run_receiver () {
-	cout << "Node :: run_receiver () called" << endl;
 
 	/* Initialize a few things */
 	bool found_last_zero = false;
 	bool received_zero = false;
 	Bit_Set * bits = new Bit_Set ();
 
-	/* Ask the user which machine will be the Initiator */
-	char * receiver = ask_user_recv ();
-	connector -> set_receiver (receiver);
-
 	/* Run the sieve.  If we find the last prime, send a 0 to the receiver. */
 	while (!found_last_zero && !received_zero) {
+		cout << "Listning..." << endl;
 		connector -> listen_msg ();
+
 		delete (bits);
-		
 		bits = new Bit_Set (connector -> get_msg ());
 		received_zero = bits -> is_zero ();
 		
@@ -88,10 +90,13 @@ void Node :: run_receiver () {
 		prime_set -> insert (prime);
 		//prime_set -> add (prime);
 		remove_multiples (prime, bits);
-		connector -> send_msg (bits -> to_string ());
+		connector -> send_msg ((char *) ((bits -> to_string ()) -> c_str ()));
 	}
 
 	run_end (found_last_zero, received_zero, bits);
+
+	/* Clean up */
+	delete (bits);
 }
 
 int Node :: ask_user_upper () {
@@ -143,7 +148,6 @@ char * Node :: ask_user_recv () {
  *	Ex: at index 5, the bit represents a 7
  */
 int Node :: get_first_value (Bit_Set * bits) {
-	cout << "Node :: get_first_value called" << endl;
 
 	int result;
 
@@ -151,14 +155,13 @@ int Node :: get_first_value (Bit_Set * bits) {
 	int index = bits -> get_first_one_bit ();
 
 	/* Use the index to find out what the value is */
-	// If there's 
 	if (index == -1) {
-		cout << "No bits have a 1 value..." << endl;
 		exit (0);
 	} else {
 		result = index + OFFSET;
 	}
 	
+
 	return result;
 }
 
@@ -169,12 +172,14 @@ int Node :: get_first_value (Bit_Set * bits) {
  * The return value is based on whether we find any multiples that we've removed
  */ 
 void Node :: remove_multiples (int value, Bit_Set * bits) {
-	cout << "Node :: remove_multiples called" << endl;
 
 	int size = bits -> get_size ();
+	cout << "removing multiples of " << value << endl;
 
 	for (int i = 0; i < size; i++) {
-		if (bits -> get_bit (i) && (i + OFFSET) % value == 0) bits -> set_bit (i, 0);
+		if (bits -> get_bit (i) && (i + OFFSET) % value == 0) {
+			bits -> set_bit (i, 0);
+		} 
 	}
 }
 
@@ -193,9 +198,11 @@ void Node :: run_end (bool found_last_zero, bool received_zero, Bit_Set * bits) 
 
 		connector -> send_msg((char *)prime_set_to_string()[0]); // send our answers to the receiver
 		connector -> listen_msg (); // get back the final solution
+		cout << "received: " << connector -> get_msg () << endl;
 		add_to_prime_set (connector -> get_msg ());
 	} else if (received_zero) {
 		connector -> listen_msg (); // get the answers from the receiver
+		cout << "received: " << connector -> get_msg () << endl;
 		add_to_prime_set (connector -> get_msg ());
 		connector -> send_msg((char *)prime_set_to_string()[0]); // send the final solution
 	} else {
@@ -206,21 +213,24 @@ void Node :: run_end (bool found_last_zero, bool received_zero, Bit_Set * bits) 
 	/* Finally, we print the answer out */
 	//prime_set -> print_list ();
 	cout << "Result: " << prime_set_to_string() << endl;
-
-	/* Clean up */
-	delete (bits);
 }
 
 // TODO : Method
 void Node :: add_to_prime_set (char * number_list) {
-	cout << "Node :: add_to_prime_set () called" << endl;
+	//cout << "Node :: add_to_prime_set () is not complete...Finish!" << endl;
+	
+		
 }
 
 string Node :: prime_set_to_string() {
+	//cout << "Node :: prime_set_to_string () is not complete...Finish!" << endl;	
 	string result = "";
 	set<int>::iterator itr;
 	
 	for(itr = prime_set -> begin(); itr != prime_set -> end(); itr++) {
 		result = " " + *itr;
 	}
+
+	return result;
 }
+
