@@ -8,6 +8,8 @@ char ask_user_role ();
 using namespace std;
 
 int main(void) {
+	system ("clear");
+
 	cout << endl;
 	cout << "------------------------------" << endl;
 	cout << "------ Starting E_Sieve ------" << endl;
@@ -47,3 +49,4 @@ char ask_user_role () {
 
 	return result[0];
 }
+

@@ -19,8 +19,8 @@
 using namespace std;
 
 #define BACKLOG 10 // how many pending connections queue will hold
-#define MAXDATASIZE 100 // max number of bytes we can get at once
-#define RECV_SIZE 50 // how many character to use for the receiver variable
+#define MAXDATASIZE 50000 // max number of bytes we can get at once
+#define RECV_SIZE 50000 // how many character to use for the receiver variable
 
 class Connector {
 
@@ -30,7 +30,7 @@ class Connector {
 		
 		void set_port (int);
 		void set_receiver (char *);
-		void send_msg (char *);
+		void send_msg (const char *);
 		void listen_msg ();
 		char * get_msg ();
 		

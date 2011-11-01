@@ -32,7 +32,7 @@ void sigchld_handler(int s) {
 }
 
 /* From sender.c */
-void Connector :: send_msg (char * message) {
+void Connector :: send_msg (const char * message) {
 
 	int sockfd, new_fd; // listen on sock_fd, new connection on new_fd
 	struct sockaddr_in my_addr; // my address information
@@ -75,7 +75,9 @@ void Connector :: send_msg (char * message) {
 		exit (1);
 	}
 	
-	while (1) { // main accept() loop
+	bool keep_going = true;
+
+	while (keep_going) { // main accept() loop
 		sin_size = sizeof (struct sockaddr_in);
 		
 		if ((new_fd = accept (sockfd, (struct sockaddr *) & their_addr, (socklen_t *) & sin_size)) == -1) {
@@ -85,18 +87,25 @@ void Connector :: send_msg (char * message) {
 		
 		printf ("server: got connection from %s\n", inet_ntoa (their_addr.sin_addr));
 		
-		if (!fork ()) { // this is the child process
-			close (sockfd); // child doesn’t need the listener
+//		if (!fork ()) { // this is the child process
+			close (sockfd); // child doesn't need the listener
 			
 			cout << "Sending message: " << message << endl;
-			
-			if (send (new_fd, message, 14, 0) == -1) {
+			int bytes_sent;
+
+			if ((bytes_sent = send (new_fd, message, MAXDATASIZE, 0)) == -1) {
 				perror ("send");
 			}
 			
-			close (new_fd);
-			exit (0);
-		}
+			if (bytes_sent == 0) {
+
+			} else {
+				keep_going = false;
+			}
+
+//			close (new_fd);
+//			exit (0);
+//		}
 		
 		close (new_fd); // parent doesn't need this
 	}
@@ -104,11 +113,10 @@ void Connector :: send_msg (char * message) {
 
 void Connector :: listen_msg () {
 	memset (msg, '\0', MAXDATASIZE);
-
-	while (msg == '\0') {
-		listen_msg_helper ();
-	}
+	sleep (1);
+	listen_msg_helper ();
 }
+
 /* From client.c */
 void Connector :: listen_msg_helper () {
 	
@@ -142,9 +150,10 @@ void Connector :: listen_msg_helper () {
 		exit (1);
 	}
 	
+
 	buf [numbytes] = '\0';
 	strncpy (msg, buf, numbytes + 1);
-	printf ("Received: %s",buf);
+	printf ("Received: %s\n",buf);
 	close (sockfd);
 }
 
