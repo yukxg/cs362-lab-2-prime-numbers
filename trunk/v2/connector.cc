@@ -113,7 +113,8 @@ void Connector :: send_msg (const char * message) {
 
 void Connector :: listen_msg () {
 	memset (msg, '\0', MAXDATASIZE);
-	sleep (1);
+	//sleep (1);
+	usleep (50000);
 	listen_msg_helper ();
 }
 

@@ -34,6 +34,7 @@ class Node {
 		void run_end (bool, bool, Bit_Set *);
 		void add_to_prime_set (char *);
 		string prime_set_to_string ();
+		void print_primes();
 
 		set<int> * prime_set;
 		Connector * connector;

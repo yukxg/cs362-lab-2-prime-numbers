@@ -41,19 +41,18 @@ void Node :: run_initiator () {
 		int prime = get_first_value (bits);
 			
 		prime_set -> insert (prime);
+		print_primes();
 		remove_multiples (prime, bits);
 		found_last_zero = bits -> is_zero ();
 
 		string * bits_string = bits -> to_string();
 
 		connector -> send_msg (bits_string -> c_str ());
-//		delete(bits_string);
 
 		if (found_last_zero) {
 			continue;
 		} else {
 			connector -> listen_msg ();
-			cout << "received: " << connector -> get_msg () << endl;
 			//delete (bits);
 			//memset (bits, 0, sizeof (bits));
 
@@ -61,7 +60,7 @@ void Node :: run_initiator () {
 			received_zero = bits -> is_zero ();
 		}
 	}
-	
+
 	run_end (found_last_zero, received_zero, bits);
 
 	/* Clean up */
@@ -88,7 +87,7 @@ void Node :: run_receiver () {
 		
 		int prime = get_first_value (bits);
 		prime_set -> insert (prime);
-		//prime_set -> add (prime);
+		print_primes();
 		remove_multiples (prime, bits);
 		connector -> send_msg ((char *) ((bits -> to_string ()) -> c_str ()));
 	}
@@ -198,11 +197,9 @@ void Node :: run_end (bool found_last_zero, bool received_zero, Bit_Set * bits) 
 
 		connector -> send_msg((char *)prime_set_to_string()[0]); // send our answers to the receiver
 		connector -> listen_msg (); // get back the final solution
-		cout << "received: " << connector -> get_msg () << endl;
 		add_to_prime_set (connector -> get_msg ());
 	} else if (received_zero) {
 		connector -> listen_msg (); // get the answers from the receiver
-		cout << "received: " << connector -> get_msg () << endl;
 		add_to_prime_set (connector -> get_msg ());
 		connector -> send_msg((char *)prime_set_to_string()[0]); // send the final solution
 	} else {
@@ -232,5 +229,15 @@ string Node :: prime_set_to_string() {
 	}
 
 	return result;
+}
+
+void Node :: print_primes() {
+	set<int>::iterator itr;
+
+	cout << "Primes = ";
+	for(itr = prime_set -> begin(); itr != prime_set -> end(); itr++) {
+		cout << " " << *itr;
+	}
+	cout << endl;
 }
 

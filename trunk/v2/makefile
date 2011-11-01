@@ -2,7 +2,7 @@ all: main.o node.o bit_set.o connector.o
 	g++ main.o node.o bit_set.o connector.o
 
 shiva: main.o node.o bit_set.o connector.o -lnsl -lsocket -lresolv
-	g++ -o shiva main.o node.o bit_set.o connector.o -lnsl -lsocket -lresolv
+	g++ -o shiva.out main.o node.o bit_set.o connector.o -lnsl -lsocket -lresolv
 
 run: rem_a_out all a.out
 	valgrind ./a.out | tee run.log
