@@ -51,7 +51,7 @@ Bit_Set :: Bit_Set (char * input_bits) {
 
 		for (int j = 0; j < BITS_PER_BYTE; j++) {
 			if (i == array_size - 1 && j >= pad) {
-				result = result << BITS_PER_BYTE - pad;
+				result = result << (BITS_PER_BYTE - pad);
 				break;
 			} else {
 				if (input_bits [(i * BITS_PER_BYTE) + j] == '1') {
@@ -236,6 +236,7 @@ string * Bit_Set :: to_string () {
 	return result;
 }
 
+// TODO : ?
 void Bit_Set :: print_bit_set() {
 	int size = get_size();
 }

@@ -29,8 +29,8 @@ class Connector {
 		~Connector ();
 		
 		void set_port (int);
-		void set_receiver (char *);
-		void send_msg (const char *);
+		void set_receiver (string);
+		void send_msg (string);
 		void listen_msg ();
 		char * get_msg ();
 		

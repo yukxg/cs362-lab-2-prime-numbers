@@ -2,7 +2,7 @@
 #define BIT_SET_H
 
 #include <iostream>
-#include <string>
+#include <string.h>
 
 #define BITS_PER_BYTE 8
 

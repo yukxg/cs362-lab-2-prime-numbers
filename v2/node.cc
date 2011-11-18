@@ -19,7 +19,7 @@ Node :: ~Node () {
 /* Depending on the role, calls the appropriate method to run the algorithm */
 void Node :: run (char role) {
 	/* Ask the user which machine will be the Initiator */
-	char * receiver = ask_user_recv ();
+	string receiver = ask_user_recv ();
 	connector -> set_receiver (receiver);
 
 	(role == 'i') ? run_initiator () : run_receiver ();
@@ -108,8 +108,8 @@ int Node :: ask_user_upper () {
 	return result;
 }
 
-char * Node :: ask_user_recv () {
-	char * result;
+string Node :: ask_user_recv () {
+	string result;
 	int input;
 
 	cout << endl;
@@ -195,13 +195,13 @@ void Node :: run_end (bool found_last_zero, bool received_zero, Bit_Set * bits) 
 	} else if (found_last_zero) {
 		cout << "I found the last prime!" << endl;
 
-		connector -> send_msg((char *)prime_set_to_string()[0]); // send our answers to the receiver
+		connector -> send_msg(prime_set_to_string().substr(0, 1)); // send our answers to the receiver
 		connector -> listen_msg (); // get back the final solution
 		add_to_prime_set (connector -> get_msg ());
 	} else if (received_zero) {
 		connector -> listen_msg (); // get the answers from the receiver
 		add_to_prime_set (connector -> get_msg ());
-		connector -> send_msg((char *)prime_set_to_string()[0]); // send the final solution
+		connector -> send_msg(prime_set_to_string().substr(0, 1)); // send the final solution
 	} else {
 		cout << "Error in Node :: run_initiator () - Something is seriously wrong here..." << endl;
 		exit (0);
@@ -220,7 +220,7 @@ void Node :: add_to_prime_set (char * number_list) {
 }
 
 string Node :: prime_set_to_string() {
-	//cout << "Node :: prime_set_to_string () is not complete...Finish!" << endl;	
+	// TODO cout << "Node :: prime_set_to_string () is not complete...Finish!" << endl;	
 	string result = "";
 	set<int>::iterator itr;
 	
