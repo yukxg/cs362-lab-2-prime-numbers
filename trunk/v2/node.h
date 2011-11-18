@@ -28,7 +28,7 @@ class Node {
 		void run_initiator ();
 		void run_receiver ();
 		int ask_user_upper ();
-		char * ask_user_recv ();
+		string ask_user_recv ();
 		int get_first_value (Bit_Set *);
 		void remove_multiples (int, Bit_Set *);
 		void run_end (bool, bool, Bit_Set *);

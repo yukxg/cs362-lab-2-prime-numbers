@@ -17,12 +17,12 @@ void Connector :: set_port (int port_value) {
 	port = port_value;
 }
 
-void Connector :: set_receiver (char * receiver_name) {
+void Connector :: set_receiver (string receiver_name) {
 
 	int size = 0;
 	while (receiver_name [size] != '\0') size++;
 
-	strncpy (receiver, receiver_name, size);
+	strncpy (receiver, receiver_name.c_str (), size);
 
 	cout << "receiver set to: " << receiver << endl;
 }
@@ -32,7 +32,7 @@ void sigchld_handler(int s) {
 }
 
 /* From sender.c */
-void Connector :: send_msg (const char * message) {
+void Connector :: send_msg (string message) {
 
 	int sockfd, new_fd; // listen on sock_fd, new connection on new_fd
 	struct sockaddr_in my_addr; // my address information
@@ -93,7 +93,7 @@ void Connector :: send_msg (const char * message) {
 			cout << "Sending message: " << message << endl;
 			int bytes_sent;
 
-			if ((bytes_sent = send (new_fd, message, MAXDATASIZE, 0)) == -1) {
+			if ((bytes_sent = send (new_fd, (const void *) message.c_str (), MAXDATASIZE, 0)) == -1) {
 				perror ("send");
 			}
 			
