@@ -88,7 +88,7 @@ void Connector :: send_msg (string message) {
 		printf ("server: got connection from %s\n", inet_ntoa (their_addr.sin_addr));
 		
 //		if (!fork ()) { // this is the child process
-			close (sockfd); // child doesn't need the listener
+//			close (sockfd); // child doesn't need the listener
 			
 			cout << "Sending message: " << message << endl;
 			int bytes_sent;
@@ -107,6 +107,7 @@ void Connector :: send_msg (string message) {
 //			exit (0);
 //		}
 		
+		close (sockfd);
 		close (new_fd); // parent doesn't need this
 	}
 }

@@ -238,6 +238,7 @@ string * Bit_Set :: to_string () {
 
 // TODO : ?
 void Bit_Set :: print_bit_set() {
-	int size = get_size();
+	cout << "[NRA] - Called print_bit_set() - function is empty\n";
+//	int size = get_size();
 }
 
