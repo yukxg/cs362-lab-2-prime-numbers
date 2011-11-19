@@ -212,11 +212,20 @@ void Node :: run_end (bool found_last_zero, bool received_zero, Bit_Set * bits) 
 	cout << "Result: " << prime_set_to_string() << endl;
 }
 
-// TODO : Method
 void Node :: add_to_prime_set (char * number_list) {
 	//cout << "Node :: add_to_prime_set () is not complete...Finish!" << endl;
-	
-		
+	int temp = 0;
+	string str = "";
+
+	for(int i = 0; i < (int)strlen(number_list); i++) {
+		if(number_list[i] != ' ') {
+			str.push_back(number_list[i]);
+		} else {
+			temp = atoi(str.c_str());
+			prime_set -> insert(temp);
+			str = "";
+		}
+	}
 }
 
 string Node :: prime_set_to_string() {
