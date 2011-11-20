@@ -6,6 +6,8 @@
 #include <string>
 #include "practical_socket.h"
 
+#define MAX_MSG_SIZE 5
+
 using namespace std;
 
 class Connector {
@@ -25,7 +27,6 @@ class Connector {
 		string * addr;
 		UDPSocket * sock;
 		unsigned short port;
-		int buf_size;
 		
 		// TCP client handling function
 //		void HandleTCPClient (); 
