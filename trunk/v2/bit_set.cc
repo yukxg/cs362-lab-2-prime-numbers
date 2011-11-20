@@ -32,9 +32,9 @@ Bit_Set :: Bit_Set (int num_bits) {
 }
 
 /* Constructor */
-Bit_Set :: Bit_Set (char * input_bits) {
+Bit_Set :: Bit_Set (string input_bits) {
 	
-	size = strlen (input_bits);
+	size = input_bits.size ();
 	pad = size % BITS_PER_BYTE;
 	
 	if (pad == 0) {
