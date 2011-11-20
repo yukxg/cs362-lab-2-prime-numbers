@@ -1,5 +1,5 @@
-all: main.o node.o bit_set.o connector.o
-	g++ main.o node.o bit_set.o connector.o
+all: main.o node.o bit_set.o connector.o practical_socket.o
+	g++ main.o node.o bit_set.o connector.o practical_socket.o
 
 shiva: main.o node.o bit_set.o connector.o -lnsl -lsocket -lresolv
 	g++ -o shiva.out main.o node.o bit_set.o connector.o -lnsl -lsocket -lresolv
@@ -25,9 +25,12 @@ bit_set.o: bit_set.cc bit_set.h
 connector.o: connector.cc connector.h
 	g++ -Wall -c connector.cc
 
+practical_socket.o: practical_socket.cc
+	g++ -Wall -c practical_socket.cc
+
 rem_a_out:
 	rm -f a.out
 
 clean:
-	rm -f *.o *.log
+	rm -f *.o *.log *.out
 

@@ -4,8 +4,7 @@
 Node :: Node () {
 
 	prime_set = new set<int>;
-	connector = new Connector ();
-	connector -> set_port (PORT);
+	connector = NULL;
 
 }
 
@@ -20,7 +19,7 @@ Node :: ~Node () {
 void Node :: run (char role) {
 	/* Ask the user which machine will be the Initiator */
 	string receiver = ask_user_recv ();
-	connector -> set_receiver (receiver);
+	connector = new Connector (receiver, PORT);
 
 	(role == 'i') ? run_initiator () : run_receiver ();
 }
@@ -33,7 +32,7 @@ void Node :: run_initiator () {
 
 	/* Ask the user how many integers to consider and create a bitset */
 	int upper = ask_user_upper ();
-	Bit_Set * bits = new Bit_Set (upper - 1);
+	Bit_Set * bits = new Bit_Set (upper);
 	bits -> set ();
 
 	/* Run the sieve.  If we find the last prime, send a 0 to the receiver. */
@@ -212,12 +211,13 @@ void Node :: run_end (bool found_last_zero, bool received_zero, Bit_Set * bits) 
 	cout << "Result: " << prime_set_to_string() << endl;
 }
 
-void Node :: add_to_prime_set (char * number_list) {
+void Node :: add_to_prime_set (string number_list) {
 	//cout << "Node :: add_to_prime_set () is not complete...Finish!" << endl;
 	int temp = 0;
+	int size = number_list.size();
 	string str = "";
 
-	for(int i = 0; i < (int)strlen(number_list); i++) {
+	for(int i = 0; i < size; i++) {
 		if(number_list[i] != ' ') {
 			str.push_back(number_list[i]);
 		} else {

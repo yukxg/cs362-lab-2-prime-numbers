@@ -13,7 +13,7 @@ class Bit_Set {
 	public:
 		Bit_Set ();
 		Bit_Set (int);
-		Bit_Set (char *);
+		Bit_Set (string);
 		~Bit_Set ();
 
 		void set ();

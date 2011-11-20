@@ -32,7 +32,7 @@ class Node {
 		int get_first_value (Bit_Set *);
 		void remove_multiples (int, Bit_Set *);
 		void run_end (bool, bool, Bit_Set *);
-		void add_to_prime_set (char *);
+		void add_to_prime_set (string);
 		string prime_set_to_string ();
 		void print_primes();
 
