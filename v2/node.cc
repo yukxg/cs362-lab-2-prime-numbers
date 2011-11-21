@@ -25,7 +25,6 @@ void Node :: run (char role) {
 }
 
 void Node :: run_initiator () {
-
 	/* Some initialization */
 	bool found_last_zero = false;
 	bool received_zero = false;
@@ -40,6 +39,7 @@ void Node :: run_initiator () {
 		int prime = get_first_value (bits);
 			
 		prime_set -> insert (prime);
+		cout << "Primes = ";
 		print_primes();
 		remove_multiples (prime, bits);
 		found_last_zero = bits -> is_zero ();
@@ -52,14 +52,12 @@ void Node :: run_initiator () {
 			continue;
 		} else {
 			connector -> listen_msg ();
-			//delete (bits);
-			//memset (bits, 0, sizeof (bits));
 
 			bits = new Bit_Set (connector -> get_msg ());
 			received_zero = bits -> is_zero ();
 		}
 	}
-
+	
 	run_end (found_last_zero, received_zero, bits);
 
 	/* Clean up */
@@ -75,7 +73,6 @@ void Node :: run_receiver () {
 
 	/* Run the sieve.  If we find the last prime, send a 0 to the receiver. */
 	while (!found_last_zero && !received_zero) {
-		cout << "Listning..." << endl;
 		connector -> listen_msg ();
 
 		delete (bits);
@@ -86,6 +83,7 @@ void Node :: run_receiver () {
 		
 		int prime = get_first_value (bits);
 		prime_set -> insert (prime);
+		cout << "Primes = ";
 		print_primes();
 		remove_multiples (prime, bits);
 		connector -> send_msg ((char *) ((bits -> to_string ()) -> c_str ()));
@@ -170,9 +168,7 @@ int Node :: get_first_value (Bit_Set * bits) {
  * The return value is based on whether we find any multiples that we've removed
  */ 
 void Node :: remove_multiples (int value, Bit_Set * bits) {
-
 	int size = bits -> get_size ();
-	cout << "removing multiples of " << value << endl;
 
 	for (int i = 0; i < size; i++) {
 		if (bits -> get_bit (i) && (i + OFFSET) % value == 0) {
@@ -183,7 +179,6 @@ void Node :: remove_multiples (int value, Bit_Set * bits) {
 
 /* The last part that both run_initiator and run_receiver call */
 void Node :: run_end (bool found_last_zero, bool received_zero, Bit_Set * bits) {
-
 	/* Combine the set of primes found by Initiator and Receiver to get final answer */
 	if (found_last_zero && received_zero) {
 		cout << "Error in Node :: run_initiator () - found_last_zero and received_zero are TRUE\n";
@@ -192,60 +187,76 @@ void Node :: run_end (bool found_last_zero, bool received_zero, Bit_Set * bits) 
 		cout << "Error in Node :: run_initiator () - found_last_zero and received_zero are FALSE\n";
 		exit (0);
 	} else if (found_last_zero) {
-		cout << "I found the last prime!" << endl;
+		cout << "Last prime found!" << endl;
 
-		connector -> send_msg(prime_set_to_string().substr(0, 1)); // send our answers to the receiver
+		connector -> send_msg(prime_set_to_string()); // send our answers to the receiver
 		connector -> listen_msg (); // get back the final solution
 		add_to_prime_set (connector -> get_msg ());
 	} else if (received_zero) {
 		connector -> listen_msg (); // get the answers from the receiver
 		add_to_prime_set (connector -> get_msg ());
-		connector -> send_msg(prime_set_to_string().substr(0, 1)); // send the final solution
+		connector -> send_msg(prime_set_to_string()); // send the final solution
 	} else {
 		cout << "Error in Node :: run_initiator () - Something is seriously wrong here..." << endl;
 		exit (0);
 	}
 
 	/* Finally, we print the answer out */
-	//prime_set -> print_list ();
-	cout << "Result: " << prime_set_to_string() << endl;
+	cout << "Final Result: ";
+	print_primes();
 }
 
 void Node :: add_to_prime_set (string number_list) {
-	//cout << "Node :: add_to_prime_set () is not complete...Finish!" << endl;
-	int temp = 0;
+	int temp = 2;
 	int size = number_list.size();
 	string str = "";
-
+	
 	for(int i = 0; i < size; i++) {
-		if(number_list[i] != ' ') {
+		if(number_list[i] != ' ' && number_list[i] != '|') {
 			str.push_back(number_list[i]);
 		} else {
 			temp = atoi(str.c_str());
-			prime_set -> insert(temp);
-			str = "";
+			if(temp > 0) {
+				prime_set -> insert(temp);
+				str.clear();
+			}
 		}
 	}
 }
 
 string Node :: prime_set_to_string() {
-	// TODO cout << "Node :: prime_set_to_string () is not complete...Finish!" << endl;	
 	string result = "";
+	stringstream stream;
 	set<int>::iterator itr;
 	
 	for(itr = prime_set -> begin(); itr != prime_set -> end(); itr++) {
-		result = " " + *itr;
+		stream << *itr << " ";
 	}
-
+	result = stream.str();
+	result += "|";
+	
 	return result;
 }
 
 void Node :: print_primes() {
 	set<int>::iterator itr;
 
-	cout << "Primes = ";
-	for(itr = prime_set -> begin(); itr != prime_set -> end(); itr++) {
-		cout << " " << *itr;
+	if(prime_set -> size() <= 30) {
+		for(itr = prime_set -> begin(); itr != prime_set -> end(); itr++) {
+			cout << " " << *itr;
+		}
+	} else {
+		set<int>::iterator first10;
+		first10 = prime_set -> begin();
+		advance(first10, 10);
+		for(itr = prime_set -> begin(); distance(itr, first10) > 0; itr++) {
+			cout << " " << *itr;
+		}
+		cout << "...   ...";
+		advance(first10, ((prime_set -> size()) - 20));
+		for(; first10 != prime_set -> end(); first10++) {
+			cout << " " << *first10;
+		}
 	}
 	cout << endl;
 }

@@ -84,23 +84,6 @@ void Bit_Set :: set () {
 
 /* Returns the index of the first 1 value found (going left to right).  Returns -1 on error */
 int Bit_Set :: get_first_one_bit () {
-
-	/*
-	int bit = 0;
-	int byte = 0;
-	for(byte = 0; byte < array_size; byte++) {
-		if(bits[byte] != 0x00) {
-			break;
-		}
-	}
-
-	cout << "First non-zero byte found at: " << byte << endl;
-
-	while(!get_bit((byte * BITS_PER_BYTE) + bit)) bit++;
-	cout << "first non-zero bit found at: " << bit << endl;
-	*/
-
-
 	int result = 0;
 
 	for (int i = 0; i < size; i++) {
@@ -126,21 +109,8 @@ bool Bit_Set :: is_zero () {
 	return result;
 } 
 
-//Verified
 /* Returns the number of bits in the entire set */
 int Bit_Set :: get_size () {
-
-	/*
-	int result = 0;
-	if (pad == 0) {
-		result = array_size * BITS_PER_BYTE;
-	} else {
-		result = (((array_size - 1) * BITS_PER_BYTE) + pad);
-	}
-	
-	cout << "bit_set :: get_size returns: " << result << endl;
-	*/
-
 	return size;	
 }
 
@@ -225,20 +195,17 @@ void Bit_Set :: set_bit (int index, int value) {
 string * Bit_Set :: to_string () {
 	int size = get_size();
 
-	// TODO : Check
 	string * result = new string ();
 		
 	for(int i = 0; i < size; i++) {
-		//(get_bit(i) ? *result += '1' : *result += '0');
 		(get_bit(i) ? *result += "1" : *result += "0");
 	}
 
 	return result;
 }
 
-// TODO : ?
+// TODO : Empty...
 void Bit_Set :: print_bit_set() {
 	cout << "[NRA] - Called print_bit_set() - function is empty\n";
-//	int size = get_size();
 }
 
