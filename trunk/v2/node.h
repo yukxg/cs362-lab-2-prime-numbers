@@ -4,6 +4,7 @@
 #include <iostream>
 #include <set>
 #include <string>
+#include <sstream>
 #include "bit_set.h"
 #include "connector.h"
 

@@ -26,9 +26,9 @@ int main(void) {
 	delete (node);
 
 	cout << endl;
-	cout << "--------------------------------------------" << endl;
-	cout << "------ E_Sieve has run to completion! ------" << endl;
-	cout << "--------------------------------------------" << endl;
+	cout << "------------------------------------" << endl;
+	cout << "------ E_Sieve has completed! ------" << endl;
+	cout << "------------------------------------" << endl;
 	cout << endl;
 
 	return 0;

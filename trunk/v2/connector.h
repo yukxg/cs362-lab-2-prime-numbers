@@ -6,7 +6,7 @@
 #include <string>
 #include "practical_socket.h"
 
-#define MAX_MSG_SIZE 5
+#define MAX_MSG_SIZE 7500
 
 using namespace std;
 
