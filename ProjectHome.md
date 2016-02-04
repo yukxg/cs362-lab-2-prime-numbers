@@ -1,0 +1,1 @@
+Finds a list of prime numbers from 1 to a user specified (non-negative) range.  This is done by two computers (as nodes) filters out any multiples of a given number and then passes this information to the next node.  The next node then does the same process and returns the updated information back to the first node.
